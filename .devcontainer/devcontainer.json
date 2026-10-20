@@ -1,6 +1,6 @@
 {
   "name": "interview-preflight",
-  "image": "ghcr.io/nicky164/interview-env:c583f8e",
+  "image": "ghcr.io/nicky164/interview-env:fa1eb28",
   "postCreateCommand": "python hello.py",
   "postStartCommand": "interview-env",
   "hostRequirements": { "cpus": 2 },
