@@ -17,5 +17,5 @@ RUN pip install --no-cache-dir uv \
     && npm install -g @anthropic-ai/claude-code @openai/codex \
     && npm cache clean --force
 
-COPY interview-env /usr/local/bin/interview-env
-RUN chmod +x /usr/local/bin/interview-env
+COPY interview-env interview-key /usr/local/bin/
+RUN chmod +x /usr/local/bin/interview-env /usr/local/bin/interview-key

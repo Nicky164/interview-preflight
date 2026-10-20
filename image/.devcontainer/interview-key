@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Print a key the interviewer provided, e.g. `interview-key INTERVIEW_ANTHROPIC_KEY`.
+# Codespaces secrets are env vars in the editor's terminals, but shells such as
+# `gh codespace ssh` don't get them, so fall back to the codespace's secrets file.
+name="${1:?usage: interview-key NAME}"
+if [ -n "${!name:-}" ]; then printf %s "${!name}"; exit 0; fi
+f=/workspaces/.codespaces/shared/.env-secrets
+v=$([ -r "$f" ] && sed -n "s/^${name}=//p" "$f" | base64 -d 2>/dev/null)
+[ -n "$v" ] && printf %s "$v"

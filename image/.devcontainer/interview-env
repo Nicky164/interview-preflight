@@ -2,25 +2,31 @@
 # Runs on every codespace start (postStartCommand). Wires up the AI keys the
 # interviewer provided and checks the toolchain. Safe to re-run: `interview-env`.
 
-if [ -n "${INTERVIEW_ANTHROPIC_KEY:-}" ]; then
+anthropic=$(interview-key INTERVIEW_ANTHROPIC_KEY)
+openai=$(interview-key INTERVIEW_OPENAI_KEY)
+
+if [ -n "$anthropic" ]; then
   mkdir -p ~/.claude
-  [ -f ~/.claude/settings.json ] || echo '{"apiKeyHelper": "printenv INTERVIEW_ANTHROPIC_KEY"}' > ~/.claude/settings.json
+  [ -f ~/.claude/settings.json ] || echo '{"apiKeyHelper": "interview-key INTERVIEW_ANTHROPIC_KEY"}' > ~/.claude/settings.json
   [ -f ~/.claude.json ] || echo '{"hasCompletedOnboarding": true}' > ~/.claude.json
 fi
-if [ -n "${INTERVIEW_OPENAI_KEY:-}" ]; then
-  printenv INTERVIEW_OPENAI_KEY | codex login --with-api-key >/dev/null 2>&1 || echo "warning: codex login failed"
+if [ -n "$openai" ]; then
+  printf %s "$openai" | codex login --with-api-key >/dev/null 2>&1 || echo "warning: codex login failed"
 fi
 
 problems=()
 python3 --version 2>&1 | grep -q "Python 3.13" || problems+=("python is not 3.13 ($(python3 --version 2>&1))")
+have_anthropic=${anthropic:+yes}; have_openai=${openai:+yes}
+unset anthropic openai
+
 for tool in uv claude codex; do command -v "$tool" >/dev/null || problems+=("$tool is not installed"); done
 
 echo
 if [ ${#problems[@]} -eq 0 ]; then
   echo "============================================================"
   echo "  ENVIRONMENT READY"
-  echo "  claude: $([ -n "${INTERVIEW_ANTHROPIC_KEY:-}" ] && echo "access provided" || echo "log in with your own account")"
-  echo "  codex:  $([ -n "${INTERVIEW_OPENAI_KEY:-}" ] && echo "access provided" || echo "log in with your own account")"
+  echo "  claude: $([ -n "$have_anthropic" ] && echo "access provided" || echo "log in with your own account")"
+  echo "  codex:  $([ -n "$have_openai" ] && echo "access provided" || echo "log in with your own account")"
   echo "============================================================"
 else
   echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
