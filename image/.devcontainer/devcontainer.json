@@ -1,0 +1,7 @@
+{
+  "name": "interview-env (image build definition)",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  }
+}
