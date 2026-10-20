@@ -3,9 +3,21 @@
   "image": "ghcr.io/nicky164/interview-env:fa1eb28",
   "postCreateCommand": "python hello.py",
   "postStartCommand": "interview-env",
-  "hostRequirements": { "cpus": 2 },
+  "hostRequirements": {
+    "cpus": 2
+  },
   "customizations": {
-    "codespaces": { "openFiles": ["README.md"] },
-    "vscode": { "extensions": ["ms-python.python"] }
+    "codespaces": {
+      "openFiles": [
+        "README.md"
+      ]
+    },
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "anthropic.claude-code",
+        "openai.chatgpt"
+      ]
+    }
   }
 }
