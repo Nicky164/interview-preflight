@@ -7,8 +7,17 @@ openai=$(interview-key INTERVIEW_OPENAI_KEY)
 
 if [ -n "$anthropic" ]; then
   mkdir -p ~/.claude
-  [ -f ~/.claude/settings.json ] || echo '{"apiKeyHelper": "interview-key INTERVIEW_ANTHROPIC_KEY"}' > ~/.claude/settings.json
-  [ -f ~/.claude.json ] || echo '{"hasCompletedOnboarding": true}' > ~/.claude.json
+  # The provided key belongs to a HIPAA-configured org, which rejects Claude Code's
+  # experimental API betas (e.g. context_management), so turn those off.
+  [ -f ~/.claude/settings.json ] || cat > ~/.claude/settings.json <<'JSON'
+{
+  "apiKeyHelper": "interview-key INTERVIEW_ANTHROPIC_KEY",
+  "env": { "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1" }
+}
+JSON
+  # Skip first-run onboarding and the "trust this folder?" prompt for the workspace.
+  [ -f ~/.claude.json ] || printf '{"hasCompletedOnboarding": true, "projects": {"%s": {"hasTrustDialogAccepted": true}}}\n' \
+    "${CODESPACE_VSCODE_FOLDER:-$PWD}" > ~/.claude.json
 fi
 if [ -n "$openai" ]; then
   printf %s "$openai" | codex login --with-api-key >/dev/null 2>&1 || echo "warning: codex login failed"
