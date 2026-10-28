@@ -4,7 +4,8 @@ This checks that the environment we'll use for your interview works on your
 computer. It takes about 3 minutes, and the real exercise is not in here.
 
 1. Click **Code → Codespaces → Create codespace on main** (use Chrome or Edge).
-   Wait for VS Code to open in the browser (1-2 minutes the first time).
+   Wait for VS Code to open in the browser (1-2 minutes the first time). If it asks
+   whether you trust the folder, click **Trust Folder & Continue**.
 2. In the terminal at the bottom, run:
 
    ```
